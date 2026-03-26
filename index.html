@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="Sistema Profesional de Gestión de Mantenimiento de Olas">
+    <title>SISTEMAS DE GESTIÓN DE MANTENIMIENTO DE OLAS | Dashboard</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="icon192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Olas">
+    <meta name="full-screen" content="yes">
+    <meta name="browsermode" content="standalone">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registrado', reg))
+                    .catch(err => console.log('Error al registrar Service Worker', err));
+            });
+        }
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAlDf6Uh5EvhMtEgTUKKnKnv-kkraIrymM",
+    authDomain: "mantenimiento-olas-2026.firebaseapp.com",
+    projectId: "mantenimiento-olas-2026",
+    storageBucket: "mantenimiento-olas-2026.firebasestorage.app",
+    messagingSenderId: "794069840835",
+    appId: "1:794069840835:web:93eba26014f7a882410376"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
+    <!-- Tailwind CSS (Via CDN for immediate professional styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            800: '#1e40af',
+                            900: '#0f172a', // Institutional Navy
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Dashboard Charts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <!-- PDF Reports -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <!-- Keep for compatibility if needed -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <!-- Advanced Excel with Images -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-active {
+            color: #2563eb;
+            border-bottom: 2px solid #2563eb;
+        }
+
+        .canvas-container {
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.5rem;
+            background: #fff;
+            cursor: crosshair;
+        }
+
+        @keyframes progress-horizontal {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+    </style>
+
+    <!-- CRITICAL: Load app.js with Firebase logic -->
+    <script type="module" src="app.js"></script>
+</head>
+
+<body class="text-slate-800 font-sans bg-slate-50 selection:bg-brand-200 selection:text-brand-900">
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="fixed inset-0 z-[100] bg-slate-50 flex items-center justify-center p-4">
+        <div class="w-full max-w-sm">
+            <div class="text-center mb-12">
+                <div
+                    class="inline-flex items-center justify-center w-20 h-20 bg-blue-600 rounded-2xl shadow-xl shadow-blue-200 mb-6">
+                    <i class="fas fa-water text-3xl text-white"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-slate-900 tracking-tight mb-2">Mantenimiento</h1>
+                <p class="text-slate-500 font-medium">Gestión Profesional de Sistemas</p>
+            </div>
+
+            <form id="login-form" class="space-y-6" autocomplete="on">
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Email</label>
+                    <input type="email" id="email" required autocomplete="email"
+                        class="w-full px-5 py-4 bg-white rounded-2xl border border-slate-200 focus:border-blue-600 outline-none transition-all font-semibold text-slate-800 shadow-sm"
+                        placeholder="ejemplo@empresa.com">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Contraseña</label>
+                    <input type="password" id="password" required autocomplete="current-password"
+                        class="w-full px-5 py-4 bg-white rounded-2xl border border-slate-200 focus:border-blue-600 outline-none transition-all font-semibold text-slate-800 shadow-sm"
+                        placeholder="••••••••">
+                </div>
+
+                <button type="submit" id="login-btn"
+                    class="w-full bg-slate-900 text-white py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-slate-800 transition-all transform active:scale-[0.98] shadow-lg flex items-center justify-center gap-3">
+                    <span>Iniciar Sesión</span>
+                    <i class="fas fa-chevron-right text-xs opacity-50"></i>
+                </button>
+
+                <p id="login-error"
+                    class="text-red-500 text-sm text-center font-bold bg-red-50 p-4 rounded-xl border border-red-100 hidden">
+                    <i class="fas fa-exclamation-circle mr-2"></i> <span>Error de credenciales</span>
+                </p>
+            </form>
+
+            <div class="mt-12 text-center">
+                <p class="text-[10px] uppercase font-bold text-slate-300 tracking-[0.2em]">Acceso Restringido •
+                    Seguridad Nivel 3</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER (Hidden until login) -->
+    <div id="app-content"
+        class="min-h-screen flex flex-col md:flex-row hidden opacity-0 transition-opacity duration-500">
+
+        <!-- SIDEBAR (Desktop) / BOTTOM NAV (Mobile) -->
+        <aside
+            class="bg-brand-900 text-white w-full md:w-64 md:fixed md:h-full z-50 flex-shrink-0 hidden md:flex flex-col">
+            <div class="p-6 border-b border-brand-800">
+                <i class="fas fa-water text-5xl text-brand-500 mb-2"></i>
+                <h1 class="text-sm font-bold tracking-tight leading-tight">SISTEMAS DE <span
+                        class="text-brand-500 text-xs block">GESTIÓN DE MANTENIMIENTO</span> DE OLAS</h1>
+            </div>
+            <nav class="flex-1 p-4 space-y-2">
+                <button onclick="switchView('master-tasks')" id="nav-master-tasks"
+                    class="w-full flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:bg-brand-800 transition hidden">
+                    <i class="fas fa-tasks text-yellow-400"></i> <span
+                        class="font-bold text-yellow-500 underline">CONFIGURAR TAREAS</span>
+                </button>
+                <button onclick="switchView('maintenance')" id="nav-maint"
+                    class="w-full flex items-center gap-3 p-3 rounded-lg bg-brand-800 text-white transition hover:bg-brand-600">
+                    <i class="fas fa-clipboard-check"></i> Mantenimiento
+                </button>
+                <button onclick="switchView('history')" id="nav-hist"
+                    class="w-full flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:bg-brand-800 transition">
+                    <i class="fas fa-history"></i> Historial
+                </button>
+                <button onclick="switchView('dashboard')" id="nav-dash"
+                    class="w-full flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:bg-brand-800 transition">
+                    <i class="fas fa-chart-pie"></i> Estadísticas
+                </button>
+                <button onclick="switchView('users')" id="nav-users"
+                    class="w-full flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:bg-brand-800 transition hidden">
+                    <i class="fas fa-users-cog"></i> Usuarios
+                </button>
+                <button onclick="switchView('settings')" id="nav-settings"
+                    class="w-full flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:bg-brand-800 transition">
+                    <i class="fas fa-palette"></i> Configuración
+                </button>
+            </nav>
+            <div class="p-4 border-t border-brand-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center font-bold">T</div>
+                    <div>
+                        <p class="text-sm font-medium" id="user-role-display">Técnico</p>
+                        <p class="text-xs text-slate-400" id="tech-status">En línea</p>
+                    </div>
+                    <button onclick="logout()" class="ml-auto text-slate-400 hover:text-red-400 transition"
+                        title="Cerrar Sesión">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 md:ml-64 pb-20 md:pb-0">
+
+            <!-- HEADER MOBILE -->
+            <header
+                class="md:hidden glass-header sticky top-0 z-40 border-b px-4 py-3 flex justify-between items-center">
+                <h1 class="font-bold text-brand-900 text-xs">SISTEMAS DE GESTIÓN DE MANTENIMIENTO DE OLAS</h1>
+                <span class="text-xs bg-brand-100 text-brand-800 px-2 py-1 rounded-full font-medium"
+                    id="ola-indicator">OLA 1</span>
+            </header>
+
+            <!-- VIEW: MANTENIMIENTO -->
+            <div id="view-maintenance" class="p-4 md:p-8 animate-fade-in pb-32">
+                <div class="max-w-4xl mx-auto">
+
+                    <!-- Stats Rápidos -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                            <p class="text-xs text-slate-500 mb-1">PROGRESO</p>
+                            <h3 class="text-2xl font-bold text-brand-600" id="dash-percentage">0%</h3>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                            <p class="text-xs text-slate-500 mb-1">REALIZADAS</p>
+                            <h3 class="text-2xl font-bold text-emerald-500" id="dash-completed">0</h3>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                            <p class="text-xs text-slate-500 mb-1">PENDIENTES</p>
+                            <h3 class="text-2xl font-bold text-slate-700" id="dash-pending">0</h3>
+                        </div>
+                        <div
+                            class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 col-span-2 md:col-span-1 justify-center flex flex-col">
+                            <p class="text-xs text-slate-500 mb-2">SELECCIONAR OLA</p>
+                            <div class="flex bg-slate-100 rounded-lg p-1">
+                                <button onclick="cambiarOla(1)" id="tab-1"
+                                    class="flex-1 py-1 rounded-md text-sm font-medium transition bg-white shadow-sm text-brand-700">Ola
+                                    1</button>
+                                <button onclick="cambiarOla(2)" id="tab-2"
+                                    class="flex-1 py-1 rounded-md text-sm font-medium transition text-slate-500 hover:text-brand-700">Ola
+                                    2</button>
+                                <button onclick="cambiarOla(3)" id="tab-3"
+                                    class="flex-1 py-1 rounded-md text-sm font-medium transition text-slate-500 hover:text-brand-700">Ola
+                                    3</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search & Global Add -->
+                    <div class="flex gap-4 mb-4">
+                        <div class="relative flex-1">
+                            <i
+                                class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                            <input type="text" id="busqueda" onkeyup="filtrarTareas()" placeholder="Buscar tarea..."
+                                class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-sm transition">
+                        </div>
+                        <button onclick="agregarTareaNueva()"
+                            class="bg-blue-600 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg hover:bg-blue-700 transition flex items-center justify-center gap-2 whitespace-nowrap active:scale-95">
+                            <i class="fas fa-plus"></i> <span>Nueva Tarea</span>
+                        </button>
+                        <button onclick="mostrarGaleriaEvidencia()"
+                            class="bg-slate-800 text-white w-12 h-12 rounded-xl flex items-center justify-center shadow-lg border border-slate-700 hover:bg-slate-700 transition active:scale-90"
+                            title="Ver Galería de Evidencia">
+                            <i class="fas fa-images text-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- Filtros de Periodicidad -->
+                    <div class="mb-6">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">Filtrar por
+                            Ciclo:</p>
+                        <div class="flex flex-wrap gap-2" id="periodicidad-filters">
+                            <button onclick="toggleFiltroPeriodicidad('Todos')" id="filter-all"
+                                class="px-3 py-1.5 rounded-full text-xs font-bold transition bg-brand-600 text-white shadow-md">TODOS</button>
+                            <button onclick="toggleFiltroPeriodicidad('Diario')"
+                                class="filter-chip px-3 py-1.5 rounded-full text-xs font-bold transition bg-white text-slate-500 border border-slate-200 hover:border-brand-500 hover:text-brand-600 shadow-sm">DIARIO</button>
+                            <button onclick="toggleFiltroPeriodicidad('Semanal')"
+                                class="filter-chip px-3 py-1.5 rounded-full text-xs font-bold transition bg-white text-slate-500 border border-slate-200 hover:border-brand-500 hover:text-brand-600 shadow-sm">SEMANAL</button>
+                            <button onclick="toggleFiltroPeriodicidad('Mensual')"
+                                class="filter-chip px-3 py-1.5 rounded-full text-xs font-bold transition bg-white text-slate-500 border border-slate-200 hover:border-brand-500 hover:text-brand-600 shadow-sm">MENSUAL</button>
+                            <button onclick="toggleFiltroPeriodicidad('Bimestral')"
+                                class="filter-chip px-3 py-1.5 rounded-full text-xs font-bold transition bg-white text-slate-500 border border-slate-200 hover:border-brand-500 hover:text-brand-600 shadow-sm">BIMESTRAL</button>
+                            <button onclick="toggleFiltroPeriodicidad('Trimestral')"
+                                class="filter-chip px-3 py-1.5 rounded-full text-xs font-bold transition bg-white text-slate-500 border border-slate-200 hover:border-brand-500 hover:text-brand-600 shadow-sm">TRIMESTRAL</button>
+                            <button onclick="toggleFiltroPeriodicidad('Cuatrimestral')"
+                                class="filter-chip px-3 py-1.5 rounded-full text-xs font-bold transition bg-white text-slate-500 border border-slate-200 hover:border-brand-500 hover:text-brand-600 shadow-sm">CUATRIMESTRAL</button>
+                            <button onclick="toggleFiltroPeriodicidad('Semestral')"
+                                class="filter-chip px-3 py-1.5 rounded-full text-xs font-bold transition bg-white text-slate-500 border border-slate-200 hover:border-brand-500 hover:text-brand-600 shadow-sm">SEMESTRAL</button>
+                            <button onclick="toggleFiltroPeriodicidad('Anual')"
+                                class="filter-chip px-3 py-1.5 rounded-full text-xs font-bold transition bg-white text-slate-500 border border-slate-200 hover:border-brand-500 hover:text-brand-600 shadow-sm">ANUAL</button>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Tareas -->
+                    <div id="lista-tareas" class="space-y-6 min-h-[300px]">
+                        <!-- Renderizado via JS -->
+                    </div>
+
+                    <!-- SECTION: FIRMA Y FINALIZACIÓN -->
+                    <div class="mt-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-lg mb-4 text-brand-900 flex items-center gap-2">
+                            <i class="fas fa-file-signature text-brand-500"></i> Validación Técnica
+                        </h3>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <!-- Nombre del Técnico -->
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Nombre del Técnico
+                                    Responsable</label>
+                                <input type="text" id="extra-tecnico-nombre" required
+                                    class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-slate-900"
+                                    placeholder="Escriba su nombre completo...">
+                                <p class="text-xs text-slate-400 mt-2">* Obligatorio para validar el reporte</p>
+                            </div>
+
+                            <!-- Geolocalización -->
+                            <div>
+                                <label class="block text-sm font-medium text-slate-600 mb-2">Ubicación</label>
+                                <div class="bg-slate-50 p-4 rounded-lg flex items-center gap-3 border border-slate-200">
+                                    <div class="bg-blue-100 p-2 rounded-full text-blue-600">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-semibold" id="geo-status">Detectando ubicación...</p>
+                                        <p class="text-xs text-slate-500 font-mono" id="geo-coords">--/--</p>
+                                    </div>
+                                    <button onclick="getGeo()"
+                                        class="text-sm text-brand-600 font-medium">Actualizar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CAMPOS ADICIONALES PARA REPORTE PROFESIONAL -->
+                        <div class="mt-8 pt-6 border-t border-slate-100 grid md:grid-cols-2 gap-6">
+                            <div class="col-span-2">
+                                <h4
+                                    class="text-brand-800 font-bold mb-4 uppercase text-xs tracking-widest border-l-4 border-brand-500 pl-3">
+                                    Detalles del mantenimiento profesional</h4>
+                            </div>
+
+                            <!-- Herramientas Utilizadas -->
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Herramientas
+                                    Utilizadas</label>
+                                <textarea id="extra-herramientas" rows="3"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition text-sm"
+                                    placeholder="Ej: Desarmadores, Multímetro..."></textarea>
+                            </div>
+
+                            <!-- Insumos Utilizados -->
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Insumos
+                                    Utilizados</label>
+                                <textarea id="extra-insumos" rows="3"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition text-sm"
+                                    placeholder="Ej: Espuma limpiadora, WD-40..."></textarea>
+                            </div>
+
+                            <!-- Procedimiento de Seguridad -->
+                            <div class="col-span-2">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Procedimiento de
+                                    Seguridad Industrial</label>
+                                <textarea id="extra-seguridad" rows="3"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition text-sm">Técnico ejecutor cuenta con su EPP.
+Contamos con extintor en el área de trabajo.
+Se verifica que el área sea segura y sin riesgos para realizar la tarea.</textarea>
+                            </div>
+
+                            <!-- Descripción de Trabajos -->
+                            <div class="col-span-2">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Descripción de los
+                                    Trabajos</label>
+                                <textarea id="extra-descripcion" rows="4"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition text-sm"
+                                    placeholder="Describa el trabajo realizado detalladamente..."></textarea>
+                            </div>
+
+                            <!-- Observaciones -->
+                            <div class="col-span-2">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Observaciones /
+                                    Recomendaciones</label>
+                                <textarea id="extra-observaciones" rows="3"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition text-sm"
+                                    placeholder="Observaciones adicionales..."></textarea>
+                            </div>
+
+                            <!-- Supervisor e Info General -->
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Supervisor
+                                    Responsable</label>
+                                <input type="text" id="extra-supervisor"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition text-sm"
+                                    placeholder="Nombre del supervisor">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Periodicidad</label>
+                                <select id="extra-periodicidad"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition text-sm">
+                                    <option value="Mantenimiento Mensual.">Mantenimiento Mensual</option>
+                                    <option value="Mantenimiento Bimestral.">Mantenimiento Bimestral</option>
+                                    <option value="Mantenimiento Trimestral.">Mantenimiento Trimestral</option>
+                                    <option value="Mantenimiento Cuatrimestral.">Mantenimiento Cuatrimestral</option>
+                                    <option value="Mantenimiento Semestral.">Mantenimiento Semestral</option>
+                                    <option value="Mantenimiento Anual.">Mantenimiento Anual</option>
+                                    <option value="Correctivo / Emergencia.">Correctivo / Emergencia</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Acciones Finales -->
+                        <div class="mt-6 flex flex-col md:flex-row gap-4 pt-6 border-t border-slate-100">
+                            <button id="btn-finalizar" type="button" onclick="finalizarMantenimiento()"
+                                class="flex-1 bg-brand-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-brand-500/30 hover:bg-brand-700 transition flex items-center justify-center gap-2">
+                                <i class="fas fa-save" id="icon-finalizar"></i> <span id="text-finalizar">FINALIZAR Y
+                                    GUARDAR</span>
+                            </button>
+                            <button onclick="exportarPDF()"
+                                class="flex-1 bg-white text-slate-700 border border-slate-300 font-semibold py-3 px-6 rounded-xl hover:bg-slate-50 transition flex items-center justify-center gap-2">
+                                <i class="fas fa-file-pdf text-red-500"></i> Reporte PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: HISTORIAL -->
+            <div id="view-history" class="hidden p-4 md:p-8 animate-fade-in pb-32">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-2xl font-bold text-brand-900 mb-6">Historial de Mantenimientos</h2>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-50 text-slate-500 font-medium">
+                                <tr>
+                                    <th class="p-4">Fecha</th>
+                                    <th class="p-4">Ola</th>
+                                    <th class="p-4 hidden md:table-cell">Completado</th>
+                                    <th class="p-4 text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historial-table-body" class="divide-y divide-slate-100">
+                                <!-- JS llenará esto -->
+                                <tr>
+                                    <td colspan="4" class="p-8 text-center text-slate-400">Cargando historial...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dashboard" class="hidden p-4 md:p-8 animate-fade-in pb-32">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-2xl font-bold text-brand-900 mb-6">Estadísticas de Rendimiento</h2>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                            <h3 class="font-bold mb-4 text-slate-700">Cumplimiento Mensual</h3>
+                            <canvas id="chart-completion"></canvas>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                            <h3 class="font-bold mb-4 text-slate-700">Mantenimientos por Ola</h3>
+                            <canvas id="chart-waves"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: USUARIOS (Admin Only) -->
+            <div id="view-users" class="p-4 md:p-8 hidden animate-fade-in">
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-brand-900">Gestión de Usuarios</h2>
+                        <button onclick="document.getElementById('modal-create-user').classList.remove('hidden')"
+                            class="bg-brand-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg shadow-brand-500/30 hover:bg-brand-700 transition flex items-center gap-2">
+                            <i class="fas fa-user-plus"></i> Nuevo Usuario
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead
+                                class="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-500 font-semibold">
+                                <tr>
+                                    <th class="p-4 hidden md:table-cell">ID</th>
+                                    <th class="p-4">Usuario (Email)</th>
+                                    <th class="p-4">Rol</th>
+                                    <th class="p-4">Nombre</th>
+                                    <th class="p-4 text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body" class="divide-y divide-slate-100 text-sm">
+                                <!-- JS Populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: CONFIGURAR TAREAS (Admin Only) -->
+            <div id="view-master-tasks" class="hidden animate-fade-in text-slate-900 bg-slate-50 min-h-screen pb-32">
+                <div class="p-4 md:p-8 max-w-6xl mx-auto pb-24">
+                    <div class="flex flex-col gap-6 mb-8">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-extrabold text-brand-900 tracking-tight">Maestro de
+                                Actividades</h2>
+                            <p class="text-slate-500 mt-1">Gestión centralizada de tareas para todos los técnicos.</p>
+                        </div>
+
+                        <!-- Botones de Acción Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <button onclick="importarDeMisTareas()"
+                                class="bg-blue-600 text-white p-4 rounded-xl font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition flex items-center justify-center gap-3 group">
+                                <i class="fas fa-file-import group-hover:scale-110 transition"></i>
+                                <span class="text-sm">IMPORTAR MIS TAREAS</span>
+                            </button>
+                            <button onclick="syncAllUsersWithMaster()"
+                                class="bg-emerald-600 text-white p-4 rounded-xl font-bold shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 transition flex items-center justify-center gap-3 group">
+                                <i class="fas fa-sync group-hover:rotate-180 transition duration-500"></i>
+                                <span class="text-sm">SINCRONIZAR A TODOS</span>
+                            </button>
+                            <button onclick="wipeDatabase()"
+                                class="bg-red-600 text-white p-4 rounded-xl font-bold shadow-lg shadow-red-500/20 hover:bg-red-700 transition flex items-center justify-center gap-3">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span class="text-sm">wIPE DATABASE (RESET)</span>
+                            </button>
+                            <button onclick="vaciarMaestro()"
+                                class="bg-white text-red-600 border border-red-100 p-4 rounded-xl font-bold hover:bg-red-50 transition flex items-center justify-center gap-3">
+                                <i class="fas fa-trash-alt"></i>
+                                <span class="text-sm text-red-500 opacity-80 uppercase">Vaciar Maestro</span>
+                            </button>
+                            <button onclick="restablecerMaestro(event)"
+                                class="bg-indigo-600 text-white p-4 rounded-xl font-bold shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition flex items-center justify-center gap-3">
+                                <i class="fas fa-undo"></i>
+                                <span class="text-sm">RESTABLECER MAESTRO</span>
+                            </button>
+                            <button onclick="syncAllUsersWithMaster(event)"
+                                class="bg-amber-600 text-white p-4 rounded-xl font-bold shadow-lg shadow-amber-500/20 hover:bg-amber-700 transition flex items-center justify-center gap-3">
+                                <i class="fas fa-sync-alt"></i>
+                                <span class="text-sm">REINICIAR Y SINCRONIZAR</span>
+                            </button>
+                            <button onclick="migrarMasterIds()"
+                                class="bg-orange-600 text-white p-4 rounded-xl font-bold shadow-lg shadow-orange-500/20 hover:bg-orange-700 transition flex items-center justify-center gap-3">
+                                <i class="fas fa-tools"></i>
+                                <span class="text-sm">VINCULAR EXISTENTES (FIX)</span>
+                            </button>
+                            <button onclick="exportarTareasExcel()"
+                                class="bg-green-600 text-white p-4 rounded-xl font-bold shadow-lg shadow-green-500/20 hover:bg-green-700 transition flex items-center justify-center gap-3">
+                                <i class="fas fa-file-excel"></i>
+                                <span class="text-sm">EXPORTAR A EXCEL</span>
+                            </button>
+                            <button onclick="document.getElementById('modal-create-task').classList.remove('hidden')"
+                                class="bg-brand-600 text-white p-4 rounded-xl font-bold shadow-lg shadow-brand-500/20 hover:bg-brand-700 transition flex items-center justify-center gap-3">
+                                <i class="fas fa-plus-circle"></i>
+                                <span class="text-sm">NUEVA TAREA</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filtros OLA -->
+                    <div
+                        class="bg-white p-2 rounded-2xl shadow-sm border border-slate-200 mb-6 flex gap-1 overflow-x-auto no-scrollbar">
+                        <button onclick="filtrarMasterTasks(1)" id="master-tab-1"
+                            class="flex-1 min-w-[80px] py-3 rounded-xl bg-brand-50 text-brand-700 font-bold border border-brand-200 transition">OLA
+                            1</button>
+                        <button onclick="filtrarMasterTasks(2)" id="master-tab-2"
+                            class="flex-1 min-w-[80px] py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition">OLA
+                            2</button>
+                        <button onclick="filtrarMasterTasks(3)" id="master-tab-3"
+                            class="flex-1 min-w-[80px] py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition">OLA
+                            3</button>
+                    </div>
+
+                    <!-- Vista Escritorio (Tabla) -->
+                    <div class="hidden md:block bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead
+                                class="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-500 font-bold">
+                                <tr>
+                                    <th class="p-5">Categoría</th>
+                                    <th class="p-5">Descripción de la Tarea</th>
+                                    <th class="p-5 text-right w-24">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="master-tasks-table-body" class="divide-y divide-slate-100">
+                                <!-- JS Populated -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Vista Móvil (Cards) -->
+                    <div id="master-tasks-mobile-container" class="md:hidden space-y-4">
+                        <!-- JS Populated con tarjetas -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL CREATE MASTER TASK -->
+            <!-- MODAL CREATE MASTER TASK (Advanced) -->
+            <div id="modal-create-task"
+                class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+                <div
+                    class="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl animate-scale-in text-slate-900 scrollbar-hide">
+                    <div
+                        class="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
+                        <h3 class="text-xl font-bold text-slate-800" id="modal-title"><i
+                                class="fas fa-tasks text-brand-600 mr-2"></i> Gestión de Tarea</h3>
+                        <button onclick="closeModalTask()" class="text-slate-400 hover:text-slate-600"><i
+                                class="fas fa-times text-xl"></i></button>
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); guardarMasterTask();" class="p-6 space-y-6">
+                        <input type="hidden" id="edit-task-id">
+                        <!-- Main Info -->
+                        <!-- Main Info -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- 1. SISTEMA (Main Title as requested) -->
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-sm font-bold text-blue-900 mb-1">Sistema / Categoría Principal
+                                    (Seleccionar)</label>
+                                <select id="new-task-system" required
+                                    class="w-full rounded-lg border-blue-300 border-2 p-3 focus:ring-blue-500 focus:border-blue-500 font-bold text-blue-800 bg-white">
+                                    <option value="" disabled selected>-- Seleccione un Sistema --</option>
+                                    <option value="MANTENIMIENTO A SISTEMA DE GRUPOS ELECTRÓGENOS">MANTENIMIENTO A
+                                        SISTEMA DE GRUPOS ELECTRÓGENOS</option>
+                                    <option value="MANTENIMIENTO DEL SISTEMA DE COMBUSTIBLE">MANTENIMIENTO DEL SISTEMA
+                                        DE COMBUSTIBLE</option>
+                                    <option value="SISTEMA DE AIRE ACONDICIONADO">SISTEMA DE AIRE ACONDICIONADO</option>
+                                    <option value="SISTEMA DE AGUA / HIDRÁULICO">SISTEMA DE AGUA / HIDRÁULICO</option>
+                                    <option value="SISTEMA ELÉCTRICO / UPS ">SISTEMA ELÉCTRICO / UPS</option>
+                                    <option value="INFRAESTRUCTURA Y LIMPIEZA">INFRAESTRUCTURA Y LIMPIEZA</option>
+                                    <option value="SISTEMA CONTRA INCENDIO">SISTEMA CONTRA INCENDIO</option>
+                                    <option
+                                        value="MANTENIMIENTO PREVENTIVO AL SISTEMA DE SUB-ESTACIONES DE CORRIENTE ALTERNA">
+                                        MANTENIMIENTO PREVENTIVO AL SISTEMA DE SUB-ESTACIONES DE CORRIENTE ALTERNA
+                                    </option>
+                                    <option value="MANTENIMIENTO PREVENTIVO AL SISTEMA DE CONTROL DE ACCESOS">
+                                        MANTENIMIENTO PREVENTIVO AL SISTEMA DE CONTROL DE ACCESOS</option>
+                                    <option value="MANTENIMIENTO PREVENTIVO AL SISTEMA DE PROTECCIÓN PERIMETRAL">
+                                        MANTENIMIENTO PREVENTIVO AL SISTEMA DE PROTECCIÓN PERIMETRAL</option>
+                                    <option
+                                        value="MANTENIMIENTO PREVENTIVO AL SISTEMA DE SEGURIDAD (SISTEMA CONTRA INCENDIOS MANUALES Y AUTOMATICOS)">
+                                        MANTENIMIENTO PREVENTIVO AL SISTEMA DE SEGURIDAD (SISTEMA CONTRA INCENDIOS
+                                        MANUALES Y AUTOMATICOS)</option>
+                                    <option value="OTRA">-- OTRA (Agregar Nueva...) --</option>
+                                </select>
+                                <div id="new-category-input-wrapper" class="mt-2 hidden">
+                                    <input type="text" id="new-task-custom-system"
+                                        class="w-full rounded-lg border-blue-300 border-2 p-3 focus:ring-blue-500 focus:border-blue-500 font-bold text-blue-800"
+                                        placeholder="Escriba el nombre del nuevo sistema/categoría...">
+                                </div>
+                            </div>
+
+                            <!-- 2. SUBTITULO: Tarea + Tipo -->
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-sm font-bold text-slate-700 mb-1">Nombre de la
+                                    Actividad</label>
+                                <textarea id="new-task-title" required
+                                    class="w-full rounded-lg border-slate-300 border p-3 focus:ring-brand-500 focus:border-brand-500 font-medium"
+                                    rows="2"
+                                    placeholder="Ej: Mantenimiento Preventivo a Generador Principal"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Tipo de
+                                    Mantenimiento</label>
+                                <select id="new-task-type"
+                                    class="w-full rounded-lg border-slate-300 border p-2.5 focus:ring-brand-500 focus:border-brand-500 bg-slate-50">
+                                    <option value="Preventivo">Preventivo</option>
+                                    <option value="Correctivo">Correctivo</option>
+                                    <option value="Emergencia">Emergencia</option>
+                                    <option value="Mejora">Mejora / Instalación</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Ticket / TTK
+                                    (Opcional)</label>
+                                <input type="text" id="new-task-ticket"
+                                    class="w-full rounded-lg border-slate-300 border p-2.5 focus:ring-brand-500 focus:border-brand-500"
+                                    placeholder="Ej: TTK-12345678">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Fecha Inicio</label>
+                                <input type="datetime-local" id="new-task-start"
+                                    class="w-full rounded-lg border-slate-300 border p-2.5 focus:ring-brand-500 focus:border-brand-500">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Fecha Fin</label>
+                                <input type="datetime-local" id="new-task-end"
+                                    class="w-full rounded-lg border-slate-300 border p-2.5 focus:ring-brand-500 focus:border-brand-500">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Ola(s) Destino</label>
+                                <div class="flex gap-4 p-2 bg-slate-50 rounded-lg border border-slate-200">
+                                    <label
+                                        class="flex items-center gap-2 cursor-pointer hover:text-brand-600 transition">
+                                        <input type="checkbox" value="1"
+                                            class="ola-checkbox w-4 h-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+                                        <span class="text-sm font-bold">OLA 1</span>
+                                    </label>
+                                    <label
+                                        class="flex items-center gap-2 cursor-pointer hover:text-brand-600 transition">
+                                        <input type="checkbox" value="2"
+                                            class="ola-checkbox w-4 h-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+                                        <span class="text-sm font-bold">OLA 2</span>
+                                    </label>
+                                    <label
+                                        class="flex items-center gap-2 cursor-pointer hover:text-brand-600 transition">
+                                        <input type="checkbox" value="3"
+                                            class="ola-checkbox w-4 h-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+                                        <span class="text-sm font-bold">OLA 3</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Periodicidad</label>
+                                <select id="new-task-periodicidad"
+                                    class="w-full rounded-lg border-slate-300 border p-2.5 focus:ring-brand-500 focus:border-brand-500">
+                                    <option value="Diario">Diario</option>
+                                    <option value="Semanal">Semanal</option>
+                                    <option value="Mensual" selected>Mensual</option>
+                                    <option value="Bimestral">Bimestral</option>
+                                    <option value="Trimestral">Trimestral</option>
+                                    <option value="Cuatrimestral">Cuatrimestral</option>
+                                    <option value="Semestral">Semestral</option>
+                                    <option value="Anual">Anual</option>
+                                </select>
+                            </div>
+
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-sm font-bold text-slate-700 mb-1">Descripción / Comentario
+                                    Inicial</label>
+                                <textarea id="new-task-desc"
+                                    class="w-full rounded-lg border-slate-300 border p-3 focus:ring-brand-500 focus:border-brand-500"
+                                    rows="2" placeholder="Detalles técnicos, herramientas necesarias, etc."></textarea>
+                            </div>
+
+                            <!-- NEW: Main Photo Reference -->
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-sm font-bold text-slate-700 mb-1"><i
+                                        class="fas fa-camera mr-1"></i> Foto de Referencia / Instrucción
+                                    (Opcional)</label>
+                                <input type="text" id="new-task-photo-ref"
+                                    class="w-full rounded-lg border-slate-300 border p-2.5 text-xs text-slate-500"
+                                    placeholder="URL de la imagen (o funcionalidad futura de carga)">
+                            </div>
+                        </div>
+
+                        <!-- Sub-activities Section -->
+                        <div class="border-t border-slate-200 pt-4">
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Sub-actividades y
+                                    Fotos</h4>
+                                <button type="button" onclick="agregarSubtareaUI()"
+                                    class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-1 px-3 rounded-full transition">
+                                    <i class="fas fa-plus mr-1"></i> Agregar Paso
+                                </button>
+                            </div>
+
+                            <div id="subtasks-container" class="space-y-3">
+                                <!-- Dynamic Subtasks will be added here -->
+                                <div
+                                    class="p-3 bg-slate-50 rounded-lg border border-slate-200 relative group subtask-item">
+                                    <input type="text" placeholder="Descripción de la sub-actividad..."
+                                        class="subtask-text w-full bg-transparent border-none focus:ring-0 p-0 text-sm font-medium mb-2 placeholder-slate-400"
+                                        required>
+                                    <div class="flex items-center gap-2 text-xs text-slate-500">
+                                        <i class="fas fa-camera"></i>
+                                        <span>Fotos requeridas:</span>
+                                        <input type="number" min="0" value="1"
+                                            class="subtask-photos w-16 rounded border-slate-200 p-1 text-xs">
+                                    </div>
+                                    <button type="button" onclick="this.closest('.subtask-item').remove()"
+                                        class="absolute top-2 right-2 text-slate-300 hover:text-red-500 transition"><i
+                                            class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 flex gap-3 sticky bottom-0 bg-white border-t border-slate-100 pb-2">
+                            <button type="button"
+                                onclick="document.getElementById('modal-create-task').classList.add('hidden')"
+                                class="flex-1 py-3 rounded-xl border border-slate-300 font-bold text-slate-600 hover:bg-slate-50 transition">Cancelar</button>
+                            <button type="submit"
+                                class="flex-1 py-3 rounded-xl bg-brand-600 font-bold text-white hover:bg-brand-700 shadow-xl shadow-brand-500/30 transition transform active:scale-95">Guardar
+                                Tarea</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- MODAL CREATE USER -->
+            <div id="modal-create-user"
+                class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+                <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-scale-in">
+                    <div class="p-6 border-b border-slate-100">
+                        <h3 class="text-lg font-bold text-slate-800"><i
+                                class="fas fa-user-plus text-brand-600 mr-2"></i> Crear
+                            Nuevo Usuario</h3>
+                    </div>
+                    <form onsubmit="event.preventDefault(); crearUsuario();" class="p-6 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Nombre Completo</label>
+                            <input type="text" id="new-user-name" required
+                                class="w-full rounded-lg border-slate-300 border p-2 focus:ring-brand-500 focus:border-brand-500"
+                                placeholder="Ej: Juan Pérez">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Correo Electrónico</label>
+                            <input type="email" id="new-user-email" required
+                                class="w-full rounded-lg border-slate-300 border p-2 focus:ring-brand-500 focus:border-brand-500"
+                                placeholder="usuario@mantenimiento.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
+                            <input type="password" id="new-user-pass" required minlength="6"
+                                class="w-full rounded-lg border-slate-300 border p-2 focus:ring-brand-500 focus:border-brand-500"
+                                placeholder="••••••••">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Rol</label>
+                            <select id="new-user-role"
+                                class="w-full rounded-lg border-slate-300 border p-2 focus:ring-brand-500 focus:border-brand-500">
+                                <option value="tecnico">Técnico (Solo Reportar)</option>
+                                <option value="admin">Administrador (Control Total)</option>
+                            </select>
+                        </div>
+                        <div class="pt-4 flex gap-3">
+                            <button type="button"
+                                onclick="document.getElementById('modal-create-user').classList.add('hidden')"
+                                class="flex-1 py-2 rounded-lg border border-slate-300 font-medium text-slate-700 hover:bg-slate-50">Cancelar</button>
+                            <button type="submit"
+                                class="flex-1 py-2 rounded-lg bg-brand-600 font-bold text-white hover:bg-brand-700 shadow-lg shadow-brand-500/30">Crear
+                                Usuario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- VIEW: CONFIGURACIÓN (Admin Only) -->
+            <div id="view-settings" class="hidden p-4 md:p-8 animate-fade-in pb-32">
+                <div class="max-w-4xl mx-auto">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-brand-900 mb-2">Personalización de la Aplicación</h2>
+                        <p class="text-slate-600">Configura el título, logo, colores y marca de tu aplicación</p>
+                    </div>
+
+                    <!-- Preview Section -->
+                    <div
+                        class="bg-gradient-to-br from-brand-50 to-slate-50 p-6 rounded-2xl border-2 border-brand-200 mb-8">
+                        <h3
+                            class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <i class="fas fa-eye text-brand-600"></i> Vista Previa
+                        </h3>
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                            <!-- Preview Header -->
+                            <div id="preview-header" class="p-6 border-b border-slate-200"
+                                style="background-color: var(--preview-primary, #2563eb);">
+                                <div class="flex items-center gap-4">
+                                    <div id="preview-logo-container"
+                                        class="w-16 h-16 rounded-xl bg-white/20 flex items-center justify-center overflow-hidden">
+                                        <i id="preview-logo-icon" class="fas fa-water text-4xl text-white"></i>
+                                        <img id="preview-logo-img" class="w-full h-full object-cover hidden" alt="Logo">
+                                    </div>
+                                    <div>
+                                        <h1 id="preview-title"
+                                            class="text-white font-bold text-lg leading-tight whitespace-pre-line">
+                                            SISTEMAS DE
+                                            GESTIÓN DE MANTENIMIENTO
+                                            DE OLAS</h1>
+                                        <p id="preview-company" class="text-white/80 text-sm font-medium mt-1">CORPOSER
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Preview Content -->
+                            <div class="p-6">
+                                <div class="flex gap-3 mb-4">
+                                    <button class="flex-1 py-2 rounded-lg font-bold text-white shadow-lg"
+                                        style="background-color: var(--preview-primary, #2563eb);">
+                                        Botón Primario
+                                    </button>
+                                    <button class="flex-1 py-2 rounded-lg font-bold text-white shadow-lg"
+                                        style="background-color: var(--preview-secondary, #1e40af);">
+                                        Botón Secundario
+                                    </button>
+                                </div>
+                                <div class="text-sm text-slate-600">
+                                    <i class="fas fa-info-circle text-brand-500"></i> Los cambios se aplicarán en tiempo
+                                    real
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Form -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 bg-slate-50">
+                            <h3 class="font-bold text-lg text-slate-800">Configuración de Marca</h3>
+                        </div>
+
+                        <div class="p-6 space-y-6">
+                            <!-- App Title -->
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">
+                                    <i class="fas fa-heading text-brand-600 mr-1"></i> Título de la Aplicación
+                                </label>
+                                <textarea id="settings-app-title" rows="3"
+                                    class="w-full rounded-xl border-slate-300 border p-3 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 font-semibold"
+                                    placeholder="Ej: SISTEMAS DE&#10;GESTIÓN DE MANTENIMIENTO&#10;DE OLAS">SISTEMAS DE
+GESTIÓN DE MANTENIMIENTO
+DE OLAS</textarea>
+                                <p class="text-xs text-slate-500 mt-1">Usa Enter para crear múltiples líneas</p>
+                            </div>
+
+                            <!-- Company Name -->
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">
+                                    <i class="fas fa-building text-brand-600 mr-1"></i> Nombre de la Empresa
+                                </label>
+                                <input type="text" id="settings-company-name"
+                                    class="w-full rounded-xl border-slate-300 border p-3 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 font-semibold"
+                                    placeholder="Ej: CORPOSER" value="CORPOSER">
+                            </div>
+
+                            <!-- Logo URL -->
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">
+                                    <i class="fas fa-image text-brand-600 mr-1"></i> URL del Logo (Opcional)
+                                </label>
+                                <input type="url" id="settings-logo-url"
+                                    class="w-full rounded-xl border-slate-300 border p-3 focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                                    placeholder="https://ejemplo.com/logo.png">
+                                <p class="text-xs text-slate-500 mt-1">Deja vacío para usar el icono predeterminado</p>
+                            </div>
+
+                            <!-- Color Pickers -->
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                                    <i class="fas fa-palette text-brand-600"></i> Colores del Tema
+                                </h4>
+
+                                <!-- Primary Colors Row -->
+                                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">
+                                            Color Primario
+                                        </label>
+                                        <div class="flex gap-2">
+                                            <input type="color" id="settings-primary-color" value="#2563eb"
+                                                class="w-16 h-12 rounded-lg border-2 border-slate-300 cursor-pointer">
+                                            <input type="text" id="settings-primary-hex" value="#2563eb"
+                                                class="flex-1 rounded-lg border-slate-300 border p-2 font-mono text-sm">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">
+                                            Color Secundario
+                                        </label>
+                                        <div class="flex gap-2">
+                                            <input type="color" id="settings-secondary-color" value="#1e40af"
+                                                class="w-16 h-12 rounded-lg border-2 border-slate-300 cursor-pointer">
+                                            <input type="text" id="settings-secondary-hex" value="#1e40af"
+                                                class="flex-1 rounded-lg border-slate-300 border p-2 font-mono text-sm">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">
+                                            Color de Acento
+                                        </label>
+                                        <div class="flex gap-2">
+                                            <input type="color" id="settings-accent-color" value="#3b82f6"
+                                                class="w-16 h-12 rounded-lg border-2 border-slate-300 cursor-pointer">
+                                            <input type="text" id="settings-accent-hex" value="#3b82f6"
+                                                class="flex-1 rounded-lg border-slate-300 border p-2 font-mono text-sm">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Background & Text Colors Row -->
+                                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">
+                                            Color de Fondo
+                                        </label>
+                                        <div class="flex gap-2">
+                                            <input type="color" id="settings-bg-color" value="#f3f4f6"
+                                                class="w-16 h-12 rounded-lg border-2 border-slate-300 cursor-pointer">
+                                            <input type="text" id="settings-bg-hex" value="#f3f4f6"
+                                                class="flex-1 rounded-lg border-slate-300 border p-2 font-mono text-sm">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">
+                                            Color de Texto
+                                        </label>
+                                        <div class="flex gap-2">
+                                            <input type="color" id="settings-text-color" value="#1e293b"
+                                                class="w-16 h-12 rounded-lg border-2 border-slate-300 cursor-pointer">
+                                            <input type="text" id="settings-text-hex" value="#1e293b"
+                                                class="flex-1 rounded-lg border-slate-300 border p-2 font-mono text-sm">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">
+                                            Color de Borde
+                                        </label>
+                                        <div class="flex gap-2">
+                                            <input type="color" id="settings-border-color" value="#e2e8f0"
+                                                class="w-16 h-12 rounded-lg border-2 border-slate-300 cursor-pointer">
+                                            <input type="text" id="settings-border-hex" value="#e2e8f0"
+                                                class="flex-1 rounded-lg border-slate-300 border p-2 font-mono text-sm">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Status Colors Row -->
+                                <div class="grid md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">
+                                            Color de Éxito
+                                        </label>
+                                        <div class="flex gap-2">
+                                            <input type="color" id="settings-success-color" value="#10b981"
+                                                class="w-16 h-12 rounded-lg border-2 border-slate-300 cursor-pointer">
+                                            <input type="text" id="settings-success-hex" value="#10b981"
+                                                class="flex-1 rounded-lg border-slate-300 border p-2 font-mono text-sm">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">
+                                            Color de Advertencia
+                                        </label>
+                                        <div class="flex gap-2">
+                                            <input type="color" id="settings-warning-color" value="#f59e0b"
+                                                class="w-16 h-12 rounded-lg border-2 border-slate-300 cursor-pointer">
+                                            <input type="text" id="settings-warning-hex" value="#f59e0b"
+                                                class="flex-1 rounded-lg border-slate-300 border p-2 font-mono text-sm">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">
+                                            Color de Peligro
+                                        </label>
+                                        <div class="flex gap-2">
+                                            <input type="color" id="settings-danger-color" value="#ef4444"
+                                                class="w-16 h-12 rounded-lg border-2 border-slate-300 cursor-pointer">
+                                            <input type="text" id="settings-danger-hex" value="#ef4444"
+                                                class="flex-1 rounded-lg border-slate-300 border p-2 font-mono text-sm">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="pt-6 border-t border-slate-100 flex gap-3">
+                                <button onclick="resetCustomSettings()"
+                                    class="flex-1 md:flex-none md:px-6 py-3 rounded-xl border-2 border-slate-300 font-bold text-slate-700 hover:bg-slate-50 transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-undo"></i> Restablecer
+                                </button>
+                                <button onclick="saveCustomSettings()"
+                                    class="flex-1 py-3 rounded-xl bg-brand-600 font-bold text-white hover:bg-brand-700 shadow-lg shadow-brand-500/30 transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-save"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Info Card -->
+                    <div class="mt-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
+                        <div class="flex gap-3">
+                            <i class="fas fa-info-circle text-blue-600 text-xl mt-0.5"></i>
+                            <div class="text-sm text-blue-900">
+                                <p class="font-bold mb-1">Información Importante</p>
+                                <ul class="list-disc list-inside space-y-1 text-blue-800">
+                                    <li>Los cambios se guardan localmente en tu navegador</li>
+                                    <li>Los colores se aplican automáticamente en toda la aplicación</li>
+                                    <li>Puedes restablecer los valores predeterminados en cualquier momento</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- MOBILE BOTTOM NAV -->
+        <nav
+            class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around p-3 z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+            <button onclick="switchView('maintenance')" id="mobile-nav-maint"
+                class="flex flex-col items-center text-slate-400">
+                <i class="fas fa-clipboard-check text-xl mb-1"></i>
+                <span class="text-[10px] font-medium">Tareas</span>
+            </button>
+            <button onclick="switchView('history')" id="mobile-nav-hist"
+                class="flex flex-col items-center text-slate-400 hover:text-brand-600 transition">
+                <i class="fas fa-history text-xl mb-1"></i>
+                <span class="text-[10px] font-medium">Historial</span>
+            </button>
+            <button onclick="switchView('dashboard')" id="mobile-nav-dash"
+                class="flex flex-col items-center text-slate-400 hover:text-brand-600 transition">
+                <i class="fas fa-chart-bar text-xl mb-1"></i>
+                <span class="text-[10px] font-medium">Dashboard</span>
+            </button>
+            <button onclick="switchView('master-tasks')" id="mobile-nav-master"
+                class="flex flex-col items-center text-slate-400 hover:text-brand-600 transition hidden">
+                <i class="fas fa-tasks text-xl mb-1"></i>
+                <span class="text-[10px] font-medium">Tareas</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- Modals & Scripts -->
+    <div id="modal-confirm"
+        class="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl transform transition-all scale-100">
+            <div
+                class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 text-brand-600 text-2xl">
+                <i class="fas fa-question"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Confirmar Acción</h3>
+            <p id="modal-msg" class="text-gray-500 text-sm mb-6">¿Deseas cambiar el estado de esta tarea?</p>
+            <div class="flex gap-3">
+                <button onclick="closeModal()"
+                    class="flex-1 py-2.5 rounded-xl border border-gray-300 font-medium text-gray-700 hover:bg-gray-50">Cancelar</button>
+                <button id="btn-modal-ok"
+                    class="flex-1 py-2.5 rounded-xl bg-brand-600 font-bold text-white hover:bg-brand-700 shadow-lg shadow-brand-500/30">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Historial -->
+    <div id="modal-edit-history"
+        class="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl transform transition-all scale-100">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-gray-900">Editar Registro Histórico</h3>
+                <button onclick="closeEditHistoryModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <input type="hidden" id="edit-history-id">
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Técnico</label>
+                    <input type="text" id="edit-history-tech"
+                        class="w-full rounded-lg border-gray-300 border p-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
+                    <input type="datetime-local" id="edit-history-date"
+                        class="w-full rounded-lg border-gray-300 border p-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ola</label>
+                    <select id="edit-history-ola"
+                        class="w-full rounded-lg border-gray-300 border p-2 focus:ring-brand-500 focus:border-brand-500">
+                        <option value="1">OLA 1</option>
+                        <option value="2">OLA 2</option>
+                        <option value="3">OLA 3</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-8 flex gap-3">
+                <button onclick="closeEditHistoryModal()"
+                    class="flex-1 py-2.5 rounded-xl border border-gray-300 font-medium text-gray-700 hover:bg-gray-50">Cancelar</button>
+                <button onclick="guardarEdicionHistorial()"
+                    class="flex-1 py-2.5 rounded-xl bg-brand-600 font-bold text-white hover:bg-brand-700 shadow-lg shadow-brand-500/30">Guardar
+                    Cambios</button>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div> <!-- Close #app-content -->
+
+    <!-- Modal Galería de Fotos -->
+    <div id="modal-gallery"
+        class="fixed inset-0 bg-black/95 z-[110] hidden flex flex-col p-4 backdrop-blur-xl overflow-hidden">
+        <div class="flex justify-between items-center p-4 text-white">
+            <div class="flex flex-col">
+                <h3 class="text-xl font-bold flex items-center gap-3">
+                    <i class="fas fa-images text-brand-400"></i> GALERÍA DE EVIDENCIA
+                </h3>
+                <p class="text-xs text-white/50" id="gallery-info">Cargando fotos de la OLA actual...</p>
+            </div>
+            <button onclick="document.getElementById('modal-gallery').classList.add('hidden')"
+                class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition active:scale-90 shadow-lg">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div id="gallery-content"
+            class="flex-1 overflow-y-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4 pb-20">
+            <!-- Fotos via JS -->
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+    <script>
+        // Init Icons
+        lucide.createIcons();
+
+        // Tab / View Switcher Logic
+        window.switchView = (viewName) => {
+            console.log('🔄 Cambiando a vista:', viewName);
+
+            // Hide all views
+            const views = ['view-maintenance', 'view-history', 'view-dashboard', 'view-users', 'view-master-tasks', 'view-settings'];
+            views.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            // Show target
+            const target = document.getElementById(`view-${viewName}`);
+            if (target) {
+                target.classList.remove('hidden');
+            } else {
+                console.error('❌ No se encontró la vista:', `view-${viewName}`);
+            }
+
+            // Update Navigation States (Desktop & Mobile)
+            const navIds = {
+                'maintenance': ['nav-maint', 'mobile-nav-maint'],
+                'history': ['nav-hist', 'mobile-nav-hist'],
+                'dashboard': ['nav-dash', 'mobile-nav-dash'],
+                'users': ['nav-users'],
+                'master-tasks': ['nav-master-tasks', 'mobile-nav-master'],
+                'settings': ['nav-settings']
+            };
+
+            Object.entries(navIds).forEach(([name, ids]) => {
+                ids.forEach(id => {
+                    const btn = document.getElementById(id);
+                    if (btn) {
+                        if (name === viewName) {
+                            btn.classList.add('bg-brand-600', 'text-white');
+                            if (id.startsWith('mobile-')) {
+                                btn.classList.add('text-brand-600');
+                                btn.classList.remove('bg-brand-600', 'text-white', 'text-slate-400');
+                            }
+                            btn.classList.remove('text-slate-300', 'bg-brand-800', 'hover:bg-brand-800');
+                        } else {
+                            btn.classList.remove('bg-brand-600', 'text-white', 'text-brand-600');
+                            btn.classList.add(id.startsWith('mobile-') ? 'text-slate-400' : 'text-slate-300', 'hover:bg-brand-800');
+                            if (name === 'maintenance' && !id.startsWith('mobile-')) btn.classList.add('bg-brand-800');
+                        }
+                    }
+                });
+            });
+
+            // Additional logic for specific views
+            if (viewName === 'master-tasks') {
+                if (window.refreshMasterTasksTable) {
+                    window.refreshMasterTasksTable();
+                } else {
+                    console.error('❌ refreshMasterTasksTable no está definido');
+                }
+            }
+            if (viewName === 'users' && window.cargarUsuarios) window.cargarUsuarios();
+
+            // Scroll top
+            window.scrollTo(0, 0);
+        }
+
+
+
+
+        // Geo Helper
+        window.getGeo = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const coords = `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`;
+                        document.getElementById('geo-coords').innerText = coords;
+                        document.getElementById('geo-status').innerText = "Ubicación detectada";
+                        document.getElementById('geo-status').classList.add('text-green-600');
+                    },
+                    (err) => {
+                        document.getElementById('geo-status').innerText = "Sin acceso a GPS";
+                        document.getElementById('geo-status').classList.add('text-red-500');
+                    }
+                );
+            }
+        }
+
+        // Auto get Geo
+        getGeo();
+    </script>
+
+    <!-- Overlay de Carga de Subida -->
+    <div id="upload-overlay"
+        class="hidden fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center text-white">
+        <div class="bg-slate-900/80 p-8 rounded-3xl flex flex-col items-center shadow-2xl border border-white/10">
+            <i class="fas fa-cloud-upload-alt text-6xl mb-4 animate-bounce text-brand-400"></i>
+            <h3 class="text-xl font-bold mb-2">Subiendo Evidencia</h3>
+            <p class="text-white/60 text-sm">Comprimiendo y guardando en la nube...</p>
+            <div class="w-48 h-1.5 bg-white/10 rounded-full mt-6 overflow-hidden relative">
+                <div class="absolute inset-0 bg-brand-500 w-1/2 rounded-full animate-[progress-horizontal_2s_infinite]">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,599 @@
+﻿/* ============================================
+   PREMIUM TRICOLOR THEME (User Request)
+   ============================================ */
+:root {
+    --primary: #007aff;
+    /* Azul Vibrante (Arriba) */
+    --body-bg: #ffffff;
+    /* Blanco Puro (Medio) */
+    --footer-bg: #ff3b30;
+    /* Rojo Intenso (Abajo) */
+    --text-on-primary: #ffffff;
+    --text-on-footer: #ffffff;
+    --text-main: #333333;
+    --text-sub: #666666;
+    --border-light: #e0e0e0;
+
+    --accent: #0056b3;
+    --success: #34c759;
+    --radius-group: 12px;
+    --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--body-bg);
+    font-family: var(--font-stack);
+    color: var(--text-main);
+    line-height: 1.4;
+    padding-bottom: 90px;
+    /* Footer space */
+    font-size: 15px;
+    /* iOS standard body */
+}
+
+/* ============================================
+   HEADER (ARRIBA - AZUL)
+   ============================================ */
+header {
+    background: linear-gradient(135deg, #007aff 0%, #0056b3 100%);
+    color: var(--text-on-primary);
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+header h1 {
+    color: var(--text-on-primary);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   PROGRESS BAR (Minimal Ring/Line)
+   ============================================ */
+.progress-container {
+    max-width: 600px;
+    margin: 0 auto 1.2rem;
+    padding: 0 0.5rem;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.progress-bar-bg {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: #ffffff;
+    /* Barra blanca sobre fondo azul */
+    border-radius: 10px;
+    transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* ============================================
+   TABS SEGMENTADAS (Pills)
+   ============================================ */
+.tabs {
+    display: flex;
+    background: rgba(255, 255, 255, 0.2);
+    /* Gris medio */
+    padding: 3px;
+    border-radius: 10px;
+    margin: 0 auto 1rem;
+    max-width: 400px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.tab-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 6px 12px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Sombra elevación */
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* ============================================
+   SEARCH BAR
+   ============================================ */
+.search-container {
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-sub);
+    font-size: 14px;
+}
+
+#busqueda {
+    width: 100%;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    /* Input gris claro */
+    border-radius: 10px;
+    padding: 9px 12px 9px 34px;
+    font-size: 16px;
+    /* Evita zoom en iOS */
+    color: #333;
+    transition: background 0.2s;
+}
+
+#busqueda:focus {
+    outline: none;
+    background: #d1d1d6;
+}
+
+/* ============================================
+   CONTENT (MEDIO - BLANCO)
+   ============================================ */
+.content {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--body-bg);
+    padding: 1.5rem 1rem;
+    min-height: 60vh;
+    /* Asegurar espacio blanco visual */
+}
+
+.category-section {
+    margin-bottom: 2rem;
+}
+
+.categoria-header {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: var(--primary);
+    /* Azul para headers */
+    margin-bottom: 1rem;
+    margin-left: 0;
+    /* Alinear con padding grupo */
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 0.5rem;
+}
+
+.cat-icon {
+    color: var(--accent);
+}
+
+/* El Grupo Blanco (Contenedor) */
+.task-group {
+    background: #ffffff;
+    border-radius: var(--radius-group);
+    overflow: hidden;
+    /* Para recortar bordes de hijos */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-light);
+}
+
+/* Cada Fila de Tarea */
+.task-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: #ffffff;
+    position: relative;
+    transition: background 0.2s;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Separador (Border Bottom) excepto el último */
+.task-row:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 56px;
+    /* Dejar espacio para checkbox */
+    right: 0;
+    height: 1px;
+    /* Linea muy fina */
+    background: #e5e5ea;
+    transform: scaleY(0.5);
+    /* Retina hairline */
+    display: none;
+    /* Replaced by task-row border-bottom */
+}
+
+.task-row:last-child {
+    border-bottom: none;
+}
+
+/* Fila Completada */
+.task-row.completada .titulo-tarea {
+    color: #999;
+    text-decoration: line-through;
+}
+
+/* ============================================
+   CUSTOM CHECKBOX (Circular)
+   ============================================ */
+.task-info {
+    display: flex;
+    align-items: flex-start;
+    /* Alinear arriba si texto es largo */
+    gap: 12px;
+    flex: 1;
+    padding-right: 10px;
+}
+
+.custom-checkbox {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    /* Alinear visualmente con texto */
+}
+
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    /* Gris inactivo */
+    background-color: transparent;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkmark i {
+    color: white;
+    font-size: 14px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s cubic-bezier(0.5, 1.6, 0.4, 0.7);
+}
+
+.custom-checkbox input:checked~.checkmark {
+    background-color: var(--success);
+    border-color: var(--success);
+}
+
+.custom-checkbox input:checked~.checkmark i {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.titulo-tarea {
+    font-size: 16px;
+    font-weight: 400;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* ============================================
+   ACTIONS (Camera / Preview)
+   ============================================ */
+.task-actions {
+    flex-shrink: 0;
+}
+
+.btn-icon {
+    background: #f0f8ff;
+    /* Azul muy claro */
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-icon:hover {
+    background: var(--accent-light);
+}
+
+.preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.mini-preview {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.view-label {
+    font-size: 9px;
+    color: var(--accent);
+    margin-top: 2px;
+    font-weight: 600;
+}
+
+/* ============================================
+   FOOTER (ABAJO - ROJO)
+   ============================================ */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--footer-bg);
+    padding: 1rem;
+    display: flex;
+    gap: 12px;
+    z-index: 50;
+    border-top: none;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-action {
+    flex: 1;
+    height: 44px;
+    /* Altura touch standard */
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    box-shadow: none;
+}
+
+.btn-action:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.excel {
+    /* Override para mantener consistencia con rojo si se desea, o dejar iconos */
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid white;
+}
+
+.pdf {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid white;
+    color: var(--danger);
+}
+
+/* ============================================
+   MODAL (iOS Alert Style)
+   ============================================ */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s;
+    backdrop-filter: blur(2px);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: #f2f2f2;
+    /* iOS alert bg */
+    width: 270px;
+    border-radius: 14px;
+    text-align: center;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: scale(1.1);
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-icon {
+    display: none;
+}
+
+/* No icon in standard iOS alert */
+
+.modal-content h3 {
+    margin-top: 16px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.modal-content p {
+    margin: 4px 16px 16px;
+    font-size: 13px;
+    color: #000;
+    line-height: 1.3;
+}
+
+.modal-actions {
+    display: flex;
+    border-top: 0.5px solid rgba(60, 60, 67, 0.29);
+    /* iOS separator */
+}
+
+.btn-modal {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 12px 0;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.btn-modal+.btn-modal {
+    border-left: 0.5px solid rgba(60, 60, 67, 0.29);
+}
+
+.btn-modal.cancel {
+    color: #007aff;
+    font-weight: 400;
+}
+
+.btn-modal.confirm {
+    color: #007aff;
+    font-weight: 600;
+}
+
+.btn-modal:active {
+    background: rgba(0, 0, 0, 0.05);
+    /* Touch feedback */
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (min-width: 768px) {
+    body {
+        background-color: #f5f5f7;
+        /* Mac background style */
+    }
+
+    .task-group {
+        border: 1px solid #d1d1d6;
+        /* Más definición en escritorio */
+    }
+
+    .modal-content {
+        width: 320px;
+    }
+
+    .btn-icon {
+        background: white;
+        border: 1px solid #e5e5ea;
+    }
+}
+/* ============================================
+   SISTEMA DE NOTIFICACIONES (TOASTS)
+   ============================================ */
+#toast-container {
+    perspective: 1000px;
+}
+
+.toast-item {
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.toast-item.translate-x-full {
+    transform: translateX(120%);
+}
+
+.toast-item:not(.translate-x-full) {
+    transform: translateX(0);
+}
+
+/* ============================================
+   LIGHTBOX & UI MODERNA
+   ============================================ */
+.lightbox-backdrop {
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Scroll suave para navegaciÃ³n premium */
+html {
+    scroll-behavior: smooth;
+}
+
+
+.bg-white.rounded-2xl.shadow-lg {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.bg-slate-50.border-b {
+    background: rgba(248, 250, 252, 0.5);
+    backdrop-filter: blur(5px);
+}
